@@ -5,3 +5,13 @@ export type {
   SendResult,
   WhatsAppAdapter,
 } from "./adapter.js";
+export {
+  type RawWebhookPayload,
+  type NormalizedInboundMessage,
+  type NormalizedMessageStatus,
+  type NormalizedStatusUpdate,
+  type NormalizedWebhookEvent,
+  normalizeInboundPayload,
+} from "./webhookPayload.js";
+export { isOptOutMessage } from "./optOut.js";
+export { MetaCloudApiAdapter, type MetaCloudApiAdapterOptions } from "./metaCloudApiAdapter.js";

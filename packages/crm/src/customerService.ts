@@ -76,6 +76,19 @@ export async function getCustomerById(customerId: string): Promise<CustomerRecor
   return customer;
 }
 
+export async function listIdentities(customerId: string): Promise<IdentityInput[]> {
+  const db = getDb();
+  const rows = await db
+    .select({
+      identityType: crmSchema.customerIdentity.identityType,
+      identityValue: crmSchema.customerIdentity.identityValue,
+    })
+    .from(crmSchema.customerIdentity)
+    .where(eq(crmSchema.customerIdentity.customerId, customerId));
+
+  return rows.map((r) => ({ type: r.identityType as IdentityType, value: r.identityValue }));
+}
+
 export async function findIdentityMatches(
   identities: IdentityInput[],
 ): Promise<{ customerId: string; identityType: IdentityType; identityValue: string }[]> {

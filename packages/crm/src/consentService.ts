@@ -24,12 +24,17 @@ async function getPurposeByKey(purposeKey: string) {
   return purpose;
 }
 
+interface ActorContext {
+  actorUserId?: string;
+  actorType: "human" | "system" | "ai";
+}
+
 async function setConsent(
   customerId: string,
   purposeKey: string,
   granted: boolean,
   source: string,
-  actor: AuthenticatedActor,
+  actor: ActorContext,
 ): Promise<void> {
   const db = getDb();
   const purpose = await getPurposeByKey(purposeKey);
@@ -80,8 +85,8 @@ async function setConsent(
   });
 
   await writeAuditLog({
-    actorUserId: actor.userId,
-    actorType: "human",
+    ...(actor.actorUserId !== undefined ? { actorUserId: actor.actorUserId } : {}),
+    actorType: actor.actorType,
     action: granted ? "consent.granted" : "consent.revoked",
     entityType: "customer",
     entityId: customerId,
@@ -89,22 +94,37 @@ async function setConsent(
   });
 }
 
+/** Admin-triggered grant — requires an authenticated human actor. */
 export async function grantConsent(
   customerId: string,
   purposeKey: string,
   source: string,
   actor: AuthenticatedActor,
 ): Promise<void> {
-  await setConsent(customerId, purposeKey, true, source, actor);
+  await setConsent(customerId, purposeKey, true, source, { actorUserId: actor.userId, actorType: "human" });
 }
 
+/** Admin-triggered revoke — requires an authenticated human actor. */
 export async function revokeConsent(
   customerId: string,
   purposeKey: string,
   source: string,
   actor: AuthenticatedActor,
 ): Promise<void> {
-  await setConsent(customerId, purposeKey, false, source, actor);
+  await setConsent(customerId, purposeKey, false, source, { actorUserId: actor.userId, actorType: "human" });
+}
+
+/**
+ * System-triggered grant/revoke — no admin session involved (e.g. a WhatsApp
+ * opt-out keyword processed by the inbound webhook pipeline). `actor_user_id`
+ * is left null in the audit log; `actor_type` records that it was the system.
+ */
+export async function grantConsentSystem(customerId: string, purposeKey: string, source: string): Promise<void> {
+  await setConsent(customerId, purposeKey, true, source, { actorType: "system" });
+}
+
+export async function revokeConsentSystem(customerId: string, purposeKey: string, source: string): Promise<void> {
+  await setConsent(customerId, purposeKey, false, source, { actorType: "system" });
 }
 
 export interface ConsentStatus {

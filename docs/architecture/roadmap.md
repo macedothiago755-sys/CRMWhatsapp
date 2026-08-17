@@ -13,12 +13,18 @@ here. This roadmap fixes the *sequence and scope boundaries* only.
 - No external integrations are called live yet (WhatsApp/VTEX/Claude adapters exist as typed interfaces
   and are covered by contract tests / mocks, not live credentials).
 
-## Phase 1 — WhatsApp
+## Phase 1 — WhatsApp ✅ implemented, not yet live
 
-- Live Meta Cloud API integration: webhook verification, inbound/outbound messaging, delivery/read status,
-  opt-in/opt-out.
-- Requires: Meta Business Account + WhatsApp Business number provisioned (Product Owner, pending decision
-  — see `docs/whatsapp/whatsapp-architecture.md` §5).
+- Delivered: webhook verification handshake + HMAC signature validation, inbound text-message ingestion via
+  a BullMQ queue/worker (fast ack, idempotent processing, retry/backoff, failed-job DLQ), identity
+  resolution → conversation → message persistence, delivery/read/failed status handling, opt-out keyword →
+  consent revocation, and admin-triggered outbound sending via a real `MetaCloudApiAdapter` — see
+  `docs/whatsapp/whatsapp-architecture.md` and `docs/api/README.md`.
+- Not yet live: no Meta Business Account/WhatsApp number is connected (pending decision — see
+  `docs/whatsapp/whatsapp-architecture.md` §5), so this has been verified against synthetic payloads and a
+  mocked `fetch`, not real Meta traffic; the payload/endpoint shapes need re-verification against Meta's
+  live docs before go-live (§ same doc, doc-verification caveat). Non-text message types (image/audio/
+  video/document/interactive/location), WhatsApp Flows, and template-message admin authoring are not built.
 
 ## Phase 2 — CRM ✅ delivered (core), segments/tags pending
 

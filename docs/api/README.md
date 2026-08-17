@@ -6,12 +6,12 @@ listed permission (§2 of the same doc). An OpenAPI/JSON Schema spec generated f
 schemas is the intended long-term format once there's enough surface area to warrant it (ADR-0008); this
 table is the interim source of truth.
 
-## Health (Phase 0)
+## Health (Phase 0/1)
 
 | Method | Path | Purpose |
 |---|---|---|
 | GET | `/health` | Liveness |
-| GET | `/health/ready` | Readiness (DB reachable) |
+| GET | `/health/ready` | Readiness (DB + Redis reachable) |
 
 ## Auth (Phase 2)
 
@@ -50,7 +50,22 @@ table is the interim source of truth.
 | POST | `/customers/:id/anonymize` | `customer.delete` | Anonymize PII, keep the row |
 | DELETE | `/customers/:id` | `customer.delete` | Anonymize + soft-delete (see `docs/security/security-architecture.md` §8 on retention-policy scope) |
 
+## WhatsApp webhook (Phase 1)
+
+| Method | Path | Auth | Purpose |
+|---|---|---|---|
+| GET | `/webhooks/whatsapp` | Meta verify-token query params | One-time subscription verification handshake |
+| POST | `/webhooks/whatsapp` | `X-Hub-Signature-256` HMAC | Inbound message/status events — verifies signature, enqueues, acks fast (see `docs/whatsapp/whatsapp-architecture.md` §3) |
+
+## Conversations (Phase 1)
+
+| Method | Path | Permission | Purpose |
+|---|---|---|---|
+| GET | `/conversations/:id` | `conversation.read` | Fetch a conversation |
+| GET | `/conversations/:id/messages` | `conversation.read` | List messages (most recent first) |
+| POST | `/conversations/:id/messages` | `conversation.manage` | Admin-triggered outbound send (`{ text }`) — human handoff, not the AI response path |
+
 ## Not yet built
 
-Conversation, AI, commerce, knowledge, campaign, and analytics endpoints ship in their respective roadmap
-phases (`docs/architecture/roadmap.md`).
+AI, commerce, knowledge, campaign, and analytics endpoints ship in their respective roadmap phases
+(`docs/architecture/roadmap.md`). Customer segments/tags (Phase 2 remainder) are also not yet exposed.

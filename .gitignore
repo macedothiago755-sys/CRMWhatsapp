@@ -11,3 +11,4 @@ coverage/
 *.tsbuildinfo
 .turbo/
 pnpm-lock.yaml.bak
+dump.rdb

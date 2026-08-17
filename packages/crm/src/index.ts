@@ -18,6 +18,7 @@ export {
   createCustomer,
   getCustomerById,
   findIdentityMatches,
+  listIdentities,
   linkIdentity,
   softDeleteCustomer,
 } from "./customerService.js";
@@ -34,6 +35,8 @@ export { type TimelineEventInput, appendTimelineEvent, getTimeline } from "./tim
 export {
   grantConsent,
   revokeConsent,
+  grantConsentSystem,
+  revokeConsentSystem,
   getConsentStatus,
   isConsentGranted,
   type ConsentStatus,

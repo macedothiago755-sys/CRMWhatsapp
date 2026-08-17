@@ -9,13 +9,18 @@ for the full picture, and [`CLAUDE.md`](CLAUDE.md) for the engineering ground ru
 
 ## Status
 
-**Phase 0 (Architecture & Foundation) and the core of Phase 2 (CRM) are delivered.** Architecture is
-documented, the database schema is in place, and the monorepo is scaffolded and building. The CRM API
-(customers, identity resolution, profiles, preferences, timeline, consent, LGPD data-subject rights) and
-admin authentication (RBAC + revocable sessions) are implemented and tested — see
-[`docs/api/README.md`](docs/api/README.md) for the endpoint catalog. Live external integrations (WhatsApp,
-VTEX, Claude) are not yet wired up — see [`docs/architecture/roadmap.md`](docs/architecture/roadmap.md) for
-the phase plan and each integration doc's "Pending decisions" section for what's blocking the next phase.
+**Phase 0 (Architecture & Foundation), the core of Phase 2 (CRM), and Phase 1 (WhatsApp) are implemented.**
+Architecture is documented, the database schema is in place, and the monorepo is scaffolded and building.
+The CRM API (customers, identity resolution, profiles, preferences, timeline, consent, LGPD data-subject
+rights), admin authentication (RBAC + revocable sessions), and the WhatsApp pipeline (webhook verification,
+signed inbound ingestion via a BullMQ queue/worker, conversation + message persistence, opt-out handling,
+admin-triggered outbound sending) are implemented and tested — see [`docs/api/README.md`](docs/api/README.md)
+for the endpoint catalog. **WhatsApp is not yet live**: no Meta Business Account is connected (a pending
+Product Owner decision), so it's been verified against synthetic payloads, not real Meta traffic — see
+[`docs/whatsapp/whatsapp-architecture.md`](docs/whatsapp/whatsapp-architecture.md) §5 and the
+"Implementation status" note at the top of that doc. VTEX and Claude integrations are not yet wired up
+either — see [`docs/architecture/roadmap.md`](docs/architecture/roadmap.md) for the phase plan and each
+integration doc's "Pending decisions" section for what's blocking the next phase.
 
 ## Documentation map
 

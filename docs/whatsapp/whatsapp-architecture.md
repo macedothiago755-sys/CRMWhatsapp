@@ -2,6 +2,24 @@
 
 `packages/whatsapp` is the sole owner of all Meta WhatsApp Business Platform (Cloud API) interaction.
 
+**Implementation status (Phase 1, delivered):** webhook verification handshake, HMAC signature validation,
+inbound text-message ingestion (BullMQ queue + worker per §3), identity resolution, conversation
+create/activate, idempotent message persistence, delivery/read/failed status updates, opt-out keyword →
+consent revocation, and admin-triggered outbound sending (`MetaCloudApiAdapter`, real Meta Cloud API HTTP
+calls) — see `docs/api/README.md` for the endpoint catalog and `tests/integration/whatsapp/` /
+`tests/integration/conversation/` for coverage. **Not yet live**: no real Meta Business Account is
+connected (see §5) — every piece above is implemented and tested against synthetic payloads/a mocked
+`fetch`, not a production WhatsApp number. Image/audio/video/document/interactive/location message types are
+normalized structurally but not yet given type-specific handling beyond `text`; WhatsApp Flows, native
+catalog, and template-message admin authoring are not built.
+
+**Doc-verification caveat:** `developers.facebook.com` was unreachable from this environment (network
+egress proxy blocked it) when this was implemented. The webhook payload shape and the `/messages` send
+endpoint shape (`packages/whatsapp/src/webhookPayload.ts`, `packages/whatsapp/src/metaCloudApiAdapter.ts`)
+were cross-checked against multiple independent secondary sources instead of the primary docs directly.
+**Re-verify both against the live Meta developer dashboard/docs before connecting a real WhatsApp number**
+(master prompt §79–80) — this is flagged, not assumed safe.
+
 ## 1. Scope
 
 - Webhook verification (Meta's `hub.verify_token` challenge) and signature validation on every inbound
