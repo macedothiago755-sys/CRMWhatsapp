@@ -1,0 +1,40 @@
+{
+  "name": "polar-ai-commerce",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Polar AI Commerce — CRM + Customer Data Platform + WhatsApp AI Commerce",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build": "pnpm -r --if-present run build",
+    "dev": "pnpm --filter @polar/api dev",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "lint": "pnpm -r --if-present run lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "migrate": "tsx scripts/migrate.ts up",
+    "migrate:down": "tsx scripts/migrate.ts down"
+  },
+  "devDependencies": {
+    "@polar/ai": "workspace:*",
+    "@polar/analytics": "workspace:*",
+    "@polar/auth": "workspace:*",
+    "@polar/campaigns": "workspace:*",
+    "@polar/commerce": "workspace:*",
+    "@polar/conversation": "workspace:*",
+    "@polar/crm": "workspace:*",
+    "@polar/database": "workspace:*",
+    "@polar/knowledge": "workspace:*",
+    "@polar/observability": "workspace:*",
+    "@polar/security": "workspace:*",
+    "@polar/vtex": "workspace:*",
+    "@polar/whatsapp": "workspace:*",
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
