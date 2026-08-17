@@ -9,7 +9,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@polar/security": "workspace:*"
+    "@polar/database": "workspace:*",
+    "@polar/security": "workspace:*",
+    "drizzle-orm": "^0.38.2"
   },
   "devDependencies": {
     "typescript": "^5.7.2"

@@ -4,7 +4,7 @@ Phased delivery per master prompt §68–70. Each phase, when it starts, gets: o
 dependencies, risks, acceptance criteria — defined at the start of that phase's work, not speculatively
 here. This roadmap fixes the *sequence and scope boundaries* only.
 
-## Phase 0 — Architecture & Foundation *(this delivery)*
+## Phase 0 — Architecture & Foundation ✅ delivered
 
 - Architecture documentation (this `docs/architecture/`, `docs/data/`, `docs/ai/`, `docs/security/`,
   `docs/whatsapp/`, `docs/vtex/` tree), ADRs, ERD.
@@ -20,10 +20,17 @@ here. This roadmap fixes the *sequence and scope boundaries* only.
 - Requires: Meta Business Account + WhatsApp Business number provisioned (Product Owner, pending decision
   — see `docs/whatsapp/whatsapp-architecture.md` §5).
 
-## Phase 2 — CRM
+## Phase 2 — CRM ✅ delivered (core), segments/tags pending
 
-- Customer, identity resolution, profile, sport profile, preferences, segments, timeline, consent —
-  full read/write implementation and admin-facing APIs.
+- Delivered: customer creation, identity resolution (matched / created / ambiguous-merge-candidate —
+  merge review itself is a UI/workflow concern for the admin app, not yet built), profile, sport profile,
+  versioned preferences, timeline, full consent lifecycle, LGPD data-subject rights
+  (export/anonymize/delete), and admin authentication (email/password + RBAC + server-side revocable
+  sessions) — see `docs/api/README.md` for the endpoint catalog and `tests/integration/crm/` for coverage.
+- Not yet built: customer segments/tags read/write API (schema exists — `crm.customer_segment`,
+  `crm.customer_segment_membership`, `crm.customer_tag` — no service/routes yet), and the admin-app UI
+  itself (Customer 360 screens, merge-candidate review queue) — those land with the Admin Application work
+  alongside/after Phase 3, not as a Phase 2 blocker.
 
 ## Phase 3 — AI Orchestrator
 

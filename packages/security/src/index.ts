@@ -8,3 +8,5 @@ export {
   hasPermission,
   requirePermission,
 } from "./rbac.js";
+export { hashPassword, verifyPassword } from "./password.js";
+export { type AuditLogEntryInput, writeAuditLog } from "./auditLog.js";

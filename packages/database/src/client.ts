@@ -1,4 +1,5 @@
 import { Pool, type PoolClient } from "pg";
+import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 
 /**
  * Shared PostgreSQL connection pool.
@@ -9,6 +10,7 @@ import { Pool, type PoolClient } from "pg";
  * docs/architecture/repository-structure.md.
  */
 let pool: Pool | undefined;
+let db: NodePgDatabase | undefined;
 
 export function getPool(): Pool {
   if (!pool) {
@@ -19,6 +21,14 @@ export function getPool(): Pool {
     pool = new Pool({ connectionString });
   }
   return pool;
+}
+
+/** Shared Drizzle instance over the shared pool — one query builder, not one per package. */
+export function getDb(): NodePgDatabase {
+  if (!db) {
+    db = drizzle(getPool());
+  }
+  return db;
 }
 
 export async function withTransaction<T>(
@@ -42,5 +52,6 @@ export async function closePool(): Promise<void> {
   if (pool) {
     await pool.end();
     pool = undefined;
+    db = undefined;
   }
 }

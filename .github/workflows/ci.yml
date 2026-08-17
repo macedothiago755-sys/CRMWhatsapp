@@ -59,8 +59,11 @@ jobs:
       - name: Apply database migrations
         run: pnpm migrate
 
-      - name: Run tests
+      - name: Run unit tests
         run: pnpm test -- --coverage
+
+      - name: Run integration tests
+        run: pnpm run test:integration
 
       - name: Build
         run: pnpm build

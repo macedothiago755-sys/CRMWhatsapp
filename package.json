@@ -15,6 +15,7 @@
     "lint": "pnpm -r --if-present run lint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "migrate": "tsx scripts/migrate.ts up",
     "migrate:down": "tsx scripts/migrate.ts down"
   },

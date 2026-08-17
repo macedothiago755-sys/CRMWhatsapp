@@ -1,7 +1,12 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import sensible from "@fastify/sensible";
 import { correlationPlugin } from "./plugins/correlation.js";
+import { authPlugin } from "./plugins/auth.js";
 import { healthRoutes } from "./routes/health.js";
+import { authRoutes } from "./routes/auth.js";
+import { customerRoutes } from "./routes/customers.js";
+import { consentRoutes } from "./routes/consent.js";
+import { lgpdRoutes } from "./routes/lgpd.js";
 import { handleError } from "./errorHandler.js";
 import type { AppConfig } from "./config.js";
 
@@ -27,11 +32,16 @@ export async function buildApp(config: AppConfig): Promise<FastifyInstance> {
 
   await app.register(sensible);
   await app.register(correlationPlugin);
+  await app.register(authPlugin);
   await app.register(healthRoutes);
+  await app.register(authRoutes);
+  await app.register(customerRoutes);
+  await app.register(consentRoutes);
+  await app.register(lgpdRoutes);
 
   app.setErrorHandler(handleError);
 
-  void config; // reserved for CORS/route registration as they're added in later phases
+  void config; // reserved for CORS as it's added in a later phase
 
   return app;
 }

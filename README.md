@@ -9,10 +9,13 @@ for the full picture, and [`CLAUDE.md`](CLAUDE.md) for the engineering ground ru
 
 ## Status
 
-**Phase 0 — Architecture & Foundation.** Architecture is documented, the database schema is defined, and
-the monorepo skeleton is scaffolded. Live external integrations (WhatsApp, VTEX, Claude) are not yet wired
-up — see [`docs/architecture/roadmap.md`](docs/architecture/roadmap.md) for the phase plan and each
-integration doc's "Pending decisions" section for what's blocking the next phase.
+**Phase 0 (Architecture & Foundation) and the core of Phase 2 (CRM) are delivered.** Architecture is
+documented, the database schema is in place, and the monorepo is scaffolded and building. The CRM API
+(customers, identity resolution, profiles, preferences, timeline, consent, LGPD data-subject rights) and
+admin authentication (RBAC + revocable sessions) are implemented and tested — see
+[`docs/api/README.md`](docs/api/README.md) for the endpoint catalog. Live external integrations (WhatsApp,
+VTEX, Claude) are not yet wired up — see [`docs/architecture/roadmap.md`](docs/architecture/roadmap.md) for
+the phase plan and each integration doc's "Pending decisions" section for what's blocking the next phase.
 
 ## Documentation map
 
@@ -42,9 +45,11 @@ Requires Node.js >= 20 and pnpm.
 ```bash
 pnpm install
 cp .env.example .env   # fill in local values; never commit real secrets
-pnpm migrate            # apply database migrations (requires a running Postgres — see docker-compose below)
+pnpm migrate            # apply database migrations (requires a running Postgres with pgvector)
 pnpm dev                 # run apps/api in dev mode
-pnpm test                 # run the test suite
+pnpm test                 # unit tests (no external dependencies)
+pnpm run test:integration  # integration tests (requires DATABASE_URL — see tests/integration/README.md)
+pnpm exec tsx scripts/seed-admin.ts you@example.com 'a-strong-password' # local-only: create a SUPER_ADMIN to log in with
 ```
 
 ### Local infrastructure
